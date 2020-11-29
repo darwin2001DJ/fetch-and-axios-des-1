@@ -2,9 +2,15 @@ import "./App.css";
 import React, { Component } from "react";
 import axios from "axios";
 export default class App extends Component {
-  state = {
-    users: [],
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      users: [],
+      search: "",
+    };
+  }
+
   componentDidMount() {
     axios.get("https://jsonplaceholder.typicode.com/users").then((res) => {
       this.setState({
@@ -12,12 +18,27 @@ export default class App extends Component {
       });
     });
   }
+
+  searchHandler = (e) => {
+    this.setState({
+      search: e.target.value,
+    });
+  };
   render() {
-    const { users } = this.state;
+    const { users, search } = this.state;
+    let searchedData = users.filter((user) => {
+      return user.name.indexOf(search) !== -1;
+    });
     return (
       <div>
         <h1>User Details</h1>
-        <input id="search-box" placeholder="Search by name..." />
+        <input
+          id="search-box"
+          placeholder="Search by name..."
+          name="search"
+          value={search}
+          onChange={this.searchHandler}
+        />
         <table id="table">
           <thead>
             <tr>
@@ -28,9 +49,9 @@ export default class App extends Component {
               <th>City</th>
               <th>Pincode</th>
             </tr>
-            {users.map((user) => {
+            {searchedData.map((user) => {
               return (
-                <tr>
+                <tr key={user.id}>
                   <td>{user.name}</td>
                   <td>{user.username}</td>
                   <td>{user.email}</td>
