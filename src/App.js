@@ -27,7 +27,7 @@ export default class App extends Component {
   render() {
     const { users, search } = this.state;
     let searchedData = users.filter((user) => {
-      return user.name.indexOf(search) !== -1;
+      return user.name.toLowerCase().includes(search.toLowerCase());
     });
     return (
       <div>
